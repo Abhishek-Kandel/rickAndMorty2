@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rick and Morty Characters</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/character-card.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Rick and Morty Characters</h1>
+      <div class="sort-container">
+        <label>Sort by:</label>
+        <select id="sort-by">
+          <option value="name">Name</option>
+          <option value="status">Status</option>
+          <option value="gender">Gender</option>
+          <option value="species">Species</option>
+        </select>
+      </div>
+      <div class="search-container">
+        <label>Search:</label>
+        <input type="text" placeholder="Search characters" />
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="pagination-container">
+        <button id="previous-button">Prev</button>
+        <button id="next-button">Next</button>
+      </div>
+      <div id="character-cards-container"></div>
+    </div>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

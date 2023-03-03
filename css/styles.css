@@ -1,0 +1,73 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+  background-color: rgb(84, 40, 40);
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.sort-container {
+  margin-bottom: 20px;
+}
+
+.sort-container label {
+  margin-right: 10px;
+}
+
+.sort-container select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+label {
+  margin-right: 10px;
+}
+.pagination-container {
+  margin-bottom: 20px;
+}
+
+.pagination-container button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #0066cc;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+
