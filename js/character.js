@@ -1,3 +1,4 @@
+
 // get DOM elements
 const goBackButton = document.getElementById("go-back-button");
 const characterDetailContainer = document.getElementById(
