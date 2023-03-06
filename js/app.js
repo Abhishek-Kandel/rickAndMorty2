@@ -1,31 +1,20 @@
+import { fetchCharacters } from "./fechCharacters.js";
+
 const characterCardsContainer = document.getElementById(
   "character-cards-container"
 );
 const searchInput = document.querySelector(
   '.search-container input[type="text"]'
 );
-
 const sortBySelect = document.getElementById("sort-by");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
+
 let currentPage = 1;
 let totalPages = 1;
 let currentCharacters = {};
 let searchClicked = false;
 let searchQuery = "";
-
-//fetch characters from API
-async function fetchCharacters(page = 1, name = "") {
-  try {
-    const response = await fetch(
-      `https://rickandmortyapi.com/api/character?page=${page}&name=${name}`
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 //display characters cards
 function displayCharacters(characters) {
@@ -34,7 +23,8 @@ function displayCharacters(characters) {
   characters.forEach((character) => {
     const characterCard = document.createElement("div");
     characterCard.classList.add("character-card");
-    characterCard.innerHTML = `<img src= "${character.image}" alt="${character.name}"> <h2>${character.name}</h2> <p>Status: ${character.status}</p> <p>Gender: ${character.gender}</p> <p>Species: ${character.species}</p>`;
+    characterCard.innerHTML = `<img src= "${character.image}" alt="${character.name}"> <h2>${character.name}</h2> <br><div class="status-species"><p>${character.status}</p><pre> - </pre><p>${character.species}</p></div><br>
+                              <p class="location">Last known location:</p><p>${character.location.name}</p>`;
     characterCard.addEventListener("click", () => {
       window.location.href = `character.html?id=${character.id}`;
     });
@@ -54,10 +44,7 @@ async function handleSearch() {
   searchQuery = searchInput.value.trim();
   if (searchQuery !== "") {
     try {
-      const response = await fetch(
-        `https://rickandmortyapi.com/api/character?name=${searchQuery}`
-      );
-      const data = await response.json();
+      const data = await fetchCharacters(1, searchQuery);
       if (!data.error) {
         currentCharacters = { ...data };
         console.log(currentCharacters);
@@ -115,8 +102,21 @@ async function handlePagination(direction) {
   displayPagination();
 }
 
+//debounce handleSearch function
+function debounce(fn, delay) {
+  let timerId;
+  return function (...args) {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
+
 // event listeners
-searchInput.addEventListener("change", handleSearch);
+searchInput.addEventListener("keypress", debounce(handleSearch, 500)); 
 sortBySelect.addEventListener("change", handleSort);
 previousButton.addEventListener("click", () => handlePagination("previous"));
 nextButton.addEventListener("click", () => handlePagination("next"));

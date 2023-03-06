@@ -8,28 +8,30 @@
   <body>
     <header>
       <h1>Rick and Morty Characters</h1>
-      <div class="sort-container">
-        <label>Sort by:</label>
-        <select id="sort-by">
-          <option value="name">Name</option>
-          <option value="status">Status</option>
-          <option value="gender">Gender</option>
-          <option value="species">Species</option>
-        </select>
-      </div>
-      <div class="search-container">
-        <label>Search:</label>
-        <input type="text" placeholder="Search characters" />
+      <div class="search-sort">
+        <div class="sort-container">
+          <label>Sort by:</label>
+          <select id="sort-by">
+            <option value="name">Name</option>
+            <option value="status">Status</option>
+            <option value="gender">Gender</option>
+            <option value="species">Species</option>
+          </select>
+        </div>
+        <div class="search-container">
+          <label>Search:</label>
+          <input type="text" placeholder="Search characters" />
+        </div>
       </div>
     </header>
 
     <div class="container">
+      <div id="character-cards-container"></div>
       <div class="pagination-container">
         <button id="previous-button">Prev</button>
         <button id="next-button">Next</button>
       </div>
-      <div id="character-cards-container"></div>
     </div>
-    <script src="/js/app.js"></script>
+    <script type="module" src="/js/app.js"></script>
   </body>
 </html>

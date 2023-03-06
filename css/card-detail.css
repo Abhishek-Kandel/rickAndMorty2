@@ -6,6 +6,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background-color: beige;
 }
 
 header {
@@ -30,8 +31,25 @@ header {
 .container {
   align-items: center;
   gap: 20px;
-  margin: 20px;
+  margin-top: 100px;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 50px;
   padding: 20px;
-  background-color: #f0f0f0;
+  background-color: #bad6c7;
   border-radius: 10px;
+}
+#character-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.image {
+  border: 6px solid #bad6c7;
+  border-radius: 10px;
+  margin-right: auto;
+}
+.details {
+  margin-right: 20%;
 }
