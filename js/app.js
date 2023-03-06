@@ -1,5 +1,6 @@
 import { fetchCharacters } from "./fechCharacters.js";
 
+const pagination = document.querySelector(".pagination");
 const characterCardsContainer = document.getElementById(
   "character-cards-container"
 );
@@ -7,8 +8,6 @@ const searchInput = document.querySelector(
   '.search-container input[type="text"]'
 );
 const sortBySelect = document.getElementById("sort-by");
-const previousButton = document.getElementById("previous-button");
-const nextButton = document.getElementById("next-button");
 
 let currentPage = 1;
 let totalPages = 1;
@@ -20,22 +19,20 @@ let searchQuery = "";
 function displayCharacters(characters) {
   characterCardsContainer.innerHTML = "";
   characters = characters.results;
-  characters.forEach((character) => {
-    const characterCard = document.createElement("div");
-    characterCard.classList.add("character-card");
-    characterCard.innerHTML = `<img src= "${character.image}" alt="${character.name}"> <h2>${character.name}</h2> <br><div class="status-species"><p>${character.status}</p><pre> - </pre><p>${character.species}</p></div><br>
+  if (characters) {
+    characters.forEach((character) => {
+      const characterCard = document.createElement("div");
+      characterCard.classList.add("character-card");
+      characterCard.innerHTML = `<img src= "${character.image}" alt="${character.name}"> <h2>${character.name}</h2> <br><div class="status-species"><p>${character.status}</p><pre> - </pre><p>${character.species}</p></div><br>
                               <p class="location">Last known location:</p><p>${character.location.name}</p>`;
-    characterCard.addEventListener("click", () => {
-      window.location.href = `character.html?id=${character.id}`;
+      characterCard.addEventListener("click", () => {
+        window.location.href = `character.html?id=${character.id}`;
+      });
+      characterCardsContainer.appendChild(characterCard);
     });
-    characterCardsContainer.appendChild(characterCard);
-  });
-}
-
-//display pagination
-function displayPagination() {
-  previousButton.disabled = currentPage === 1;
-  nextButton.disabled = currentPage === totalPages;
+  } else {
+    characterCardsContainer.innerHTML = "No character found";
+  }
 }
 
 //handle search
@@ -43,26 +40,21 @@ async function handleSearch() {
   const searchInput = document.querySelector(".search-container input");
   searchQuery = searchInput.value.trim();
   if (searchQuery !== "") {
-    try {
-      const data = await fetchCharacters(1, searchQuery);
-      if (!data.error) {
-        currentCharacters = { ...data };
-        console.log(currentCharacters);
-        totalPages = data.info.pages;
-        currentPage = 1;
-        displayCharacters(currentCharacters);
-        displayPagination();
-        searchClicked = true;
-      }
-    } catch (error) {
-      alert("No character found");
-      console.error(error);
+    searchClicked = true;
+
+    const data = await fetchCharacters(1, searchQuery);
+    if (data && !data.error) {
+      currentCharacters = { ...data };
+      totalPages = data.info.pages;
+      currentPage = 1;
+      handleSort();
+      displayPaginationButtons(totalPages);
     }
   } else {
     currentCharacters = await fetchCharacters();
     totalPages = currentCharacters.info.pages;
-    displayCharacters(currentCharacters);
-    displayPagination();
+    handleSort();
+    displayPaginationButtons(totalPages);
   }
 }
 
@@ -81,25 +73,42 @@ function handleSort() {
   displayCharacters(currentCharacters);
 }
 
-//handle pagination
-async function handlePagination(direction) {
-  if (direction === "previous" && currentPage > 1) {
-    currentPage--;
-  } else if (direction === "next" && currentPage < totalPages) {
-    currentPage++;
-  } else {
+// to display pagination
+function displayPaginationButtons(totalPages) {
+  pagination.innerHTML = "";
+  if (totalPages === 1) {
     return;
   }
-
-  if (!searchClicked) {
-    currentCharacters = await fetchCharacters(currentPage);
-    totalPages = currentCharacters.info.pages;
-  } else {
-    currentCharacters = await fetchCharacters(currentPage, searchQuery);
-    totalPages = currentCharacters.info.pages;
+  for (let i = 1; i <= totalPages; i++) {
+    const button = `
+        <button class="page-button">${i}</button>
+      `;
+    pagination.insertAdjacentHTML("beforeend", button);
   }
-  displayCharacters(currentCharacters);
-  displayPagination();
+}
+
+// to handle pagination
+async function handlePaginationButtonClick(event) {
+  if (event.target.classList.contains("page-button")) {
+    currentPage = parseInt(event.target.textContent);
+    if (!searchClicked) {
+      currentCharacters = await fetchCharacters(currentPage);
+      totalPages = currentCharacters.info.pages;
+      displayCharacters(currentCharacters);
+    } else {
+      currentCharacters = await fetchCharacters(currentPage, searchQuery);
+      totalPages = currentCharacters.info.pages;
+      handleSort();
+    }
+
+    const buttons = pagination.querySelectorAll("button");
+    buttons.forEach((button) => {
+      button.classList.remove("active");
+    });
+
+    event.target.classList.add("active");
+    console.log(event.target.classList);
+  }
 }
 
 //debounce handleSearch function
@@ -116,15 +125,14 @@ function debounce(fn, delay) {
 }
 
 // event listeners
-searchInput.addEventListener("keypress", debounce(handleSearch, 500)); 
+searchInput.addEventListener("keypress", debounce(handleSearch, 500));
 sortBySelect.addEventListener("change", handleSort);
-previousButton.addEventListener("click", () => handlePagination("previous"));
-nextButton.addEventListener("click", () => handlePagination("next"));
+pagination.addEventListener("click", handlePaginationButtonClick);
 
 //initial setup
 (async function () {
   currentCharacters = await fetchCharacters();
   totalPages = currentCharacters.info.pages;
   displayCharacters(currentCharacters);
-  displayPagination();
+  displayPaginationButtons(totalPages);
 })();
