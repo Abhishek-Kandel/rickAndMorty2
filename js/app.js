@@ -79,7 +79,12 @@ function displayPaginationButtons(totalPages) {
   if (totalPages === 1) {
     return;
   }
-  for (let i = 1; i <= totalPages; i++) {
+  const button = `
+        <button class="page-button active">${1}</button>
+      `;
+  pagination.insertAdjacentHTML("beforeend", button);
+
+  for (let i = 2; i <= totalPages; i++) {
     const button = `
         <button class="page-button">${i}</button>
       `;
