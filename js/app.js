@@ -80,17 +80,43 @@ function handleSort() {
 // to display pagination
 function displayPaginationButtons(totalPages) {
   pagination.innerHTML = "";
+  let startingPage = 1;
+  let endingPage = totalPages;
+
   if (totalPages === 1) {
     return;
   }
-  const button = `
-        <button class="page-button active">${1}</button>
-      `;
-  pagination.insertAdjacentHTML("beforeend", button);
+  if (currentPage > 4) {
+    startingPage = currentPage - 4;
+  }
 
-  for (let i = 2; i <= totalPages; i++) {
+  if (currentPage < totalPages - 4) {
+    endingPage = currentPage + 5;
+  }
+
+  if (currentPage > 1) {
     const button = `
-        <button class="page-button">${i}</button>
+        <button class="page-button" id="prev">prev</button>
+      `;
+    pagination.insertAdjacentHTML("beforeend", button);
+  }
+  for (let i = startingPage; i <= endingPage; i++) {
+    if (i === 1) {
+      const button = `
+        <button class="page-button active" id="${i}">${i}</button>
+      `;
+      pagination.insertAdjacentHTML("beforeend", button);
+    } else {
+      const button = `
+          <button class="page-button" id="${i}">${i}</button>
+        `;
+      pagination.insertAdjacentHTML("beforeend", button);
+    }
+  }
+
+  if (currentPage < totalPages) {
+    const button = `
+        <button class="page-button" id="next">next</button>
       `;
     pagination.insertAdjacentHTML("beforeend", button);
   }
@@ -99,7 +125,14 @@ function displayPaginationButtons(totalPages) {
 // to handle pagination
 async function handlePaginationButtonClick(event) {
   if (event.target.classList.contains("page-button")) {
-    currentPage = parseInt(event.target.textContent);
+    if (event.target.textContent === "next") {
+      currentPage += 1;
+    } else if (event.target.textContent === "prev") {
+      currentPage -= 1;
+    } else {
+      currentPage = parseInt(event.target.textContent);
+    }
+    displayPaginationButtons(totalPages);
     if (!searchClicked) {
       currentCharacters = await fetchCharacters(currentPage);
       totalPages = currentCharacters.info.pages;
@@ -109,14 +142,14 @@ async function handlePaginationButtonClick(event) {
       totalPages = currentCharacters.info.pages;
       handleSort();
     }
-
     const buttons = pagination.querySelectorAll("button");
     buttons.forEach((button) => {
-      button.classList.remove("active");
+      if (button.getAttribute("id") === currentPage.toString()) {
+        button.classList.add("active");
+      } else {
+        button.classList.remove("active");
+      }
     });
-
-    event.target.classList.add("active");
-    console.log(event.target.classList);
   }
 }
 
