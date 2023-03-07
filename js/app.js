@@ -49,6 +49,7 @@ async function handleSearch() {
       displayPaginationButtons(totalPages);
     } else {
       characterCardsContainer.innerHTML = "No character found";
+      currentCharacters.results = undefined;
       displayPaginationButtons(1);
     }
   } else {
@@ -62,16 +63,18 @@ async function handleSearch() {
 //handle sort
 function handleSort() {
   const sortBy = sortBySelect.value;
-  currentCharacters.results.sort((a, b) => {
-    if (a[sortBy] < b[sortBy]) {
-      return -1;
-    }
-    if (a[sortBy] > b[sortBy]) {
-      return 1;
-    }
-    return 0;
-  });
-  displayCharacters(currentCharacters);
+  if (currentCharacters.results) {
+    currentCharacters.results.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) {
+        return -1;
+      }
+      if (a[sortBy] > b[sortBy]) {
+        return 1;
+      }
+      return 0;
+    });
+    displayCharacters(currentCharacters);
+  }
 }
 
 // to display pagination
@@ -139,6 +142,6 @@ pagination.addEventListener("click", handlePaginationButtonClick);
 (async function () {
   currentCharacters = await fetchCharacters();
   totalPages = currentCharacters.info.pages;
-  displayCharacters(currentCharacters);
+  handleSort(currentCharacters);
   displayPaginationButtons(totalPages);
 })();
