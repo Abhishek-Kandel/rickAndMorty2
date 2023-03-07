@@ -30,8 +30,6 @@ function displayCharacters(characters) {
       });
       characterCardsContainer.appendChild(characterCard);
     });
-  } else {
-    characterCardsContainer.innerHTML = "No character found";
   }
 }
 
@@ -49,6 +47,9 @@ async function handleSearch() {
       currentPage = 1;
       handleSort();
       displayPaginationButtons(totalPages);
+    } else {
+      characterCardsContainer.innerHTML = "No character found";
+      displayPaginationButtons(1);
     }
   } else {
     currentCharacters = await fetchCharacters();

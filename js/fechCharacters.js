@@ -4,9 +4,9 @@ const apiURL = "https://rickandmortyapi.com/api/character/";
 export async function fetchCharacters(page = 1, name = "") {
   try {
     const response = await fetch(`${apiURL}?page=${page}&name=${name}`);
-    // if (response.status === 404) {
-    //   throw new Error("Character not found");
-    // }
+    if (response.status === 404) {
+      throw new Error("Character not found");
+    }
     const data = await response.json();
     return data;
   } catch (error) {
