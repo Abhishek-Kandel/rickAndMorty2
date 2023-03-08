@@ -73,11 +73,15 @@ label {
   margin-bottom: 0.5rem;
   border-radius: 4px;
   border: none;
-  background-color: darkgreen;
+  background-color: grey;
   color: white;
   cursor: pointer;
 }
 
 .pagination .page-button.active {
-  background-color: lightgreen;
+  background-color: darkgreen;
 }
+
+/* .pagination .page-button.hide {
+  display: none;
+} */

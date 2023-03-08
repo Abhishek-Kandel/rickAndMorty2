@@ -100,6 +100,11 @@ function displayPaginationButtons(totalPages) {
       `;
     pagination.insertAdjacentHTML("beforeend", button);
   }
+
+  // Here, startingPage and endingPage will not be greater than 10 for any cases
+  // so calling displayPagination() will take O(n) time where n<=10
+  // so it may be better than, displaying and hiding all the buttons
+
   for (let i = startingPage; i <= endingPage; i++) {
     if (i === 1) {
       const button = `
@@ -132,7 +137,7 @@ async function handlePaginationButtonClick(event) {
     } else {
       currentPage = parseInt(event.target.textContent);
     }
-    displayPaginationButtons(totalPages);
+    displayPaginationButtons(totalPages); //display or hide buttons on next/prev click, don't call this function??
     if (!searchClicked) {
       currentCharacters = await fetchCharacters(currentPage);
       totalPages = currentCharacters.info.pages;
@@ -144,6 +149,9 @@ async function handlePaginationButtonClick(event) {
     }
     const buttons = pagination.querySelectorAll("button");
     buttons.forEach((button) => {
+      //to hide and display pagination on button click, here we need to apply loop, this may take O(n)
+      // because we need to define starting and ending page and add display:none for all the buttons outside that on each button click
+
       if (button.getAttribute("id") === currentPage.toString()) {
         button.classList.add("active");
       } else {
@@ -178,3 +186,4 @@ pagination.addEventListener("click", handlePaginationButtonClick);
   handleSort(currentCharacters);
   displayPaginationButtons(totalPages);
 })();
+
